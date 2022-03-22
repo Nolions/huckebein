@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "393461930843",
+    "project_id": "huckebein-bcf4a",
+    "storage_bucket": "huckebein-bcf4a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:393461930843:android:67703ec827d003abf8187e",
+        "android_client_info": {
+          "package_name": "tw.nolions.huckebein.demoandroid"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "393461930843-tufdpk0tfiovebghb0j4ll0mgelr2l5h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAA3zXqNY7RcrEf8RqJzH9nvnyPzo0nRNw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "393461930843-tufdpk0tfiovebghb0j4ll0mgelr2l5h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

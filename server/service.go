@@ -2,7 +2,7 @@ package server
 
 import (
 	"context"
-	firebase "firebase.google.com/go/v4"
+	"github.com/nolions/huckebein/notify"
 	"log"
 	"net/http"
 	"os"
@@ -12,18 +12,19 @@ import (
 )
 
 type Application struct {
-	Ctx      context.Context
-	Firebase *firebase.App
+	Ctx context.Context
+	//Firebase *firebase.App
+	Notify notify.Notify
 }
 
 type Server struct {
 	httpServer *http.Server
 }
 
-func New(ctx context.Context, app *firebase.App) *Application {
+func New(ctx context.Context, n *notify.Firebase) *Application {
 	return &Application{
-		Ctx:      ctx,
-		Firebase: app,
+		Ctx:    ctx,
+		Notify: n,
 	}
 }
 
@@ -31,7 +32,7 @@ func New(ctx context.Context, app *firebase.App) *Application {
 // init http server
 func NewHttpServer(app *Application) *Server {
 	e := engine()
-	app.handler(e)
+	app.router(e)
 
 	log.Printf("Listening on %s", ":7777")
 	h := &http.Server{

@@ -16,3 +16,12 @@ func NewsFirebase(ctx context.Context) *firebase.App {
 
 	return app
 }
+
+type Metadata map[string]interface{}
+
+type NotifyMsg struct {
+	DeviceToke string   `json:"device_toke" validate:"required, string"`
+	Title      string   `json:"title" validate:"required, string"`
+	Message    string   `json:"message"  validate:"required, string"`
+	Metadata       Metadata `json:"metadata"`
+}

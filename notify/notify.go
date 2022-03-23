@@ -10,6 +10,7 @@ import (
 
 type Notify interface {
 	SendNotify(*model.NotifyReq)
+	SendMultiNotify(req *model.MultiNotifyReq)
 }
 
 type Firebase struct {
@@ -53,6 +54,28 @@ func (f *Firebase) SendNotify(msg *model.NotifyReq) {
 	}
 
 	response, err := client.Send(f.Ctx, message)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	log.Printf("Successfully sent message:%v", response)
+}
+
+func (f *Firebase) SendMultiNotify(msg *model.MultiNotifyReq) {
+	client, err := f.Firebase.Messaging(f.Ctx)
+	if err != nil {
+		log.Fatalf("error getting Messaging client: %v\n", err)
+	}
+
+	// See documentation on defining a message payload.
+	message := &messaging.MulticastMessage{
+		Notification: &messaging.Notification{
+			Title: msg.Title,
+			Body:  msg.Message,
+		},
+		Tokens: msg.DeviceTokes,
+	}
+
+	response, err := client.SendMulticast(f.Ctx, message)
 	if err != nil {
 		log.Fatalln(err)
 	}

@@ -1,0 +1,52 @@
+# curl --location --request POST 'http://127.0.0.1:7777/multiNotify'
+#--header 'Content-Type: application/json'
+#--data-raw '{
+#    "device_tokes": [
+#        "c465mw32Rxu3vnkrGSfQ_R:APA91bEvccqsDPkeJORQ4Fg9pP2F1G8n4AHRc1mREe6dP4O2pAfinkPWU_N5MiuG-XEYp6I0G8wzHBBNzr9E_GynBRJa80i-IEPfgRNQ4CRtTpZWsk6zTNDt-_6iL_SNXVK0Pzuf6JV8"
+#    ],
+#    "title": "title",
+#    "message": "messwwage",
+#    "metadata": {
+#        "bool": true
+#    }
+#}'
+POST http://127.0.0.1:7777/multiNotify
+Content-Type: application/json
+
+{
+    "device_tokes": [
+        "c465mw32Rxu3vnkrGSfQ_R:APA91bEvccqsDPkeJORQ4Fg9pP2F1G8n4AHRc1mREe6dP4O2pAfinkPWU_N5MiuG-XEYp6I0G8wzHBBNzr9E_GynBRJa80i-IEPfgRNQ4CRtTpZWsk6zTNDt-_6iL_SNXVK0Pzuf6JV8"
+    ],
+    "title": "title",
+    "message": "messwwage",
+    "metadata": {
+        "bool": true
+    }
+}
+
+###
+
+# curl --location --request POST 'http://127.0.0.1:7777/notify'
+#--header 'Content-Type: application/json'
+#--data-raw '{
+#    "device_toke": "c465mw32Rxu3vnkrGSfQ_R:APA91bEvccqsDPkeJORQ4Fg9pP2F1G8n4AHRc1mREe6dP4O2pAfinkPWU_N5MiuG-XEYp6I0G8wzHBBNzr9E_GynBRJa80i-IEPfgRNQ4CRtTpZWsk6zTNDt-_6iL_SNXVK0Pzuf6JV8",
+#    "title": "title",
+#    "message": "message",
+#    "metadata": {
+#        "bool": true
+#    }
+#}'
+POST http://127.0.0.1:7777/notify
+Content-Type: application/json
+
+{
+    "device_toke": "c465mw32Rxu3vnkrGSfQ_R:APA91bEvccqsDPkeJORQ4Fg9pP2F1G8n4AHRc1mREe6dP4O2pAfinkPWU_N5MiuG-XEYp6I0G8wzHBBNzr9E_GynBRJa80i-IEPfgRNQ4CRtTpZWsk6zTNDt-_6iL_SNXVK0Pzuf6JV8",
+    "title": "title",
+    "message": "message",
+    "metadata": {
+        "bool": true
+    }
+}
+
+###
+

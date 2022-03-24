@@ -10,7 +10,8 @@ import (
 
 type Notify interface {
 	SendNotify(*model.NotifyReq)
-	SendMultiNotify(req *model.MultiNotifyReq)
+	SendMultiNotify(*model.MultiNotifyReq)
+	BatchSendNotify(*model.BatchNotifyReq)
 }
 
 type Firebase struct {
@@ -60,6 +61,8 @@ func (f *Firebase) SendNotify(msg *model.NotifyReq) {
 	log.Printf("Successfully sent message:%v", response)
 }
 
+// SendMultiNotify
+// Send a msg to multi device
 func (f *Firebase) SendMultiNotify(msg *model.MultiNotifyReq) {
 	client, err := f.Firebase.Messaging(f.Ctx)
 	if err != nil {
@@ -80,4 +83,32 @@ func (f *Firebase) SendMultiNotify(msg *model.MultiNotifyReq) {
 		log.Fatalln(err)
 	}
 	log.Printf("Successfully sent message:%v", response)
+}
+
+// BatchSendNotify
+// Batch send message
+func (f *Firebase) BatchSendNotify(msgs *model.BatchNotifyReq) {
+	client, err := f.Firebase.Messaging(f.Ctx)
+	if err != nil {
+		log.Fatalf("error getting Messaging client: %v\n", err)
+	}
+
+	var messages []*messaging.Message
+	for _, msg := range msgs.Notifies {
+		messages = append(messages,
+			&messaging.Message{
+				Notification: &messaging.Notification{
+					Title: msg.Title,
+					Body:  msg.Message,
+				},
+				Token: msg.DeviceToke,
+			},
+		)
+	}
+
+	resp, err := client.SendAll(context.Background(), messages)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	log.Printf(" Successfully batch send notification message:%v", resp)
 }

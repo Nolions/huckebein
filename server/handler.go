@@ -13,10 +13,10 @@ func (serv Application) router(e *gin.Engine) {
 	e.NoMethod(HandleNoAllowMethod)
 	e.NoRoute(HandleNotFound)
 
-
 	e.GET("/health", ErrHandler(serv.healthHandler))
 	e.POST("/notify", ErrHandler(serv.notifyHandler))
 	e.POST("/multiNotify", ErrHandler(serv.multiNotifyHandler))
+	e.POST("/batchNotify", ErrHandler(serv.batchNotifyHandler))
 }
 
 func (serv Application) healthHandler(c *gin.Context) error {
@@ -53,6 +53,20 @@ func (serv Application) multiNotifyHandler(c *gin.Context) error {
 	}
 
 	serv.Notify.SendMultiNotify(json)
+
+	return nil
+}
+
+func (serv Application) batchNotifyHandler(c *gin.Context) error {
+	json := &model.BatchNotifyReq{}
+	err := c.BindJSON(&json)
+	log.Printf("req:%v", json)
+	if err != nil {
+		log.Fatalf("request data error: %v\n", err)
+		return err
+	}
+
+	serv.Notify.BatchSendNotify(json)
 
 	return nil
 }

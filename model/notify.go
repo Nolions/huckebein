@@ -11,7 +11,11 @@ type NotifyReq struct {
 
 type MultiNotifyReq struct {
 	DeviceTokes []string `json:"device_tokes" validate:"required"`
-	Title      string   `json:"title" validate:"required, string"`
-	Message    string   `json:"message"  validate:"required, string"`
-	Metadata   Metadata `json:"metadata"`
+	Title       string   `json:"title" validate:"required, string"`
+	Message     string   `json:"message"  validate:"required, string"`
+	Metadata    Metadata `json:"metadata"`
+}
+
+type BatchNotifyReq struct {
+	Notifies []NotifyReq `json:"Notifies"`
 }

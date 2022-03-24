@@ -11,20 +11,27 @@ func HandleNotFound(c *gin.Context) {
 	return
 }
 
+func HandleNoAllowMethod(c *gin.Context) {
+	handleErr := NoAllowMethod()
+	c.JSON(handleErr.Code, handleErr)
+	return
+}
+
 const (
-	INTERNA_ERROR = 1000
-	NOT_FOUND     = 1001
-	UNKNOWN_ERROR   = 1002
-	PARAMETER_ERROR = 1003
+	INTERNA_ERROR   = 1000
+	NOT_FOUND       = 1001
+	NO_ALLOW_METHDO = 1002
+	UNKNOWN_ERROR   = 1003
+	PARAMETER_ERROR = 1004
 )
 
-type APIException struct {
+type HttpException struct {
 	Code       int    `json:"-"`
 	StatusCode int    `json:"statusCode"`
 	Msg        string `json:"msg"`
 }
 
-func (e *APIException) Error() string {
+func (e *HttpException) Error() string {
 	return e.Msg
 }
 
@@ -36,8 +43,8 @@ func ErrHandler(h HandlerFunc) gin.HandlerFunc {
 
 		err = h(c)
 		if err != nil {
-			var apiException *APIException
-			if h, ok := err.(*APIException); ok {
+			var apiException *HttpException
+			if h, ok := err.(*HttpException); ok {
 				apiException = h
 			} else if e, ok := err.(error); ok {
 				apiException = UnknownError(e.Error())
@@ -50,8 +57,8 @@ func ErrHandler(h HandlerFunc) gin.HandlerFunc {
 	}
 }
 
-func newAPIException(code int, errorCode int, msg string) *APIException {
-	return &APIException{
+func newHttpException(code int, errorCode int, msg string) *HttpException {
+	return &HttpException{
 		Code:       code,
 		StatusCode: errorCode,
 		Msg:        msg,
@@ -60,18 +67,24 @@ func newAPIException(code int, errorCode int, msg string) *APIException {
 
 // InternalError
 // Service Internal Error response
-func InternalError() *APIException {
-	return newAPIException(http.StatusInternalServerError, INTERNA_ERROR, http.StatusText(http.StatusInternalServerError))
+func InternalError() *HttpException {
+	return newHttpException(http.StatusInternalServerError, INTERNA_ERROR, http.StatusText(http.StatusInternalServerError))
 }
 
 // NotFound
 // Not found page error response
-func NotFound() *APIException {
-	return newAPIException(http.StatusNotFound, NOT_FOUND, http.StatusText(http.StatusNotFound))
+func NotFound() *HttpException {
+	return newHttpException(http.StatusNotFound, NOT_FOUND, http.StatusText(http.StatusNotFound))
+}
+
+// NoAllowMethod
+// Not Allow Method
+func NoAllowMethod() *HttpException {
+	return newHttpException(http.StatusMethodNotAllowed, NO_ALLOW_METHDO, http.StatusText(http.StatusMethodNotAllowed))
 }
 
 // UnknownError
 // Unknown Error response
-func UnknownError(message string) *APIException {
-	return newAPIException(http.StatusForbidden, UNKNOWN_ERROR, message)
+func UnknownError(message string) *HttpException {
+	return newHttpException(http.StatusForbidden, UNKNOWN_ERROR, message)
 }

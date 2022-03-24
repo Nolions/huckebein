@@ -9,8 +9,10 @@ import (
 )
 
 func (serv Application) router(e *gin.Engine) {
-	e.NoMethod(HandleNotFound)
+	e.HandleMethodNotAllowed = true
+	e.NoMethod(HandleNoAllowMethod)
 	e.NoRoute(HandleNotFound)
+
 
 	e.GET("/health", ErrHandler(serv.healthHandler))
 	e.POST("/notify", ErrHandler(serv.notifyHandler))

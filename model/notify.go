@@ -15,7 +15,3 @@ type MultiNotifyReq struct {
 	Message     string   `json:"message"  validate:"required, string"`
 	Metadata    Metadata `json:"metadata"`
 }
-
-type BatchNotifyReq struct {
-	Notifies []NotifyReq `json:"Notifies"`
-}

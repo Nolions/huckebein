@@ -58,7 +58,7 @@ func (serv Application) multiNotifyHandler(c *gin.Context) error {
 }
 
 func (serv Application) batchNotifyHandler(c *gin.Context) error {
-	json := &model.BatchNotifyReq{}
+	var json []model.NotifyReq
 	err := c.BindJSON(&json)
 	log.Printf("req:%v", json)
 	if err != nil {

@@ -11,7 +11,7 @@ import (
 type Notify interface {
 	SendNotify(*model.NotifyReq)
 	SendMultiNotify(*model.MultiNotifyReq)
-	BatchSendNotify(*model.BatchNotifyReq)
+	BatchSendNotify([]model.NotifyReq)
 }
 
 type Firebase struct {
@@ -87,14 +87,14 @@ func (f *Firebase) SendMultiNotify(msg *model.MultiNotifyReq) {
 
 // BatchSendNotify
 // Batch send message
-func (f *Firebase) BatchSendNotify(msgs *model.BatchNotifyReq) {
+func (f *Firebase) BatchSendNotify(msgs []model.NotifyReq) {
 	client, err := f.Firebase.Messaging(f.Ctx)
 	if err != nil {
 		log.Fatalf("error getting Messaging client: %v\n", err)
 	}
 
 	var messages []*messaging.Message
-	for _, msg := range msgs.Notifies {
+	for _, msg := range msgs {
 		messages = append(messages,
 			&messaging.Message{
 				Notification: &messaging.Notification{

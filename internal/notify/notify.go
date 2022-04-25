@@ -4,7 +4,7 @@ import (
 	"context"
 	firebase "firebase.google.com/go/v4"
 	"firebase.google.com/go/v4/messaging"
-	"github.com/nolions/huckebein/model"
+	"github.com/nolions/huckebein/internal/model"
 	"log"
 )
 
@@ -42,7 +42,7 @@ func newsFirebaseApp(ctx context.Context) *firebase.App {
 func (f *Firebase) SendNotify(msg *model.NotifyReq) {
 	client, err := f.Firebase.Messaging(f.Ctx)
 	if err != nil {
-		log.Fatalf("error getting Messaging client: %v\n", err)
+		log.Printf("error getting Messaging client: %v\n", err)
 	}
 
 	// See documentation on defining a message payload.

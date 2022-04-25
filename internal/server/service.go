@@ -2,7 +2,7 @@ package server
 
 import (
 	"context"
-	"github.com/nolions/huckebein/notify"
+	"github.com/nolions/huckebein/internal/notify"
 	"log"
 	"net/http"
 	"os"

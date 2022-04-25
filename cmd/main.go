@@ -2,8 +2,8 @@ package main
 
 import (
 	"context"
-	"github.com/nolions/huckebein/notify"
-	"github.com/nolions/huckebein/server"
+	"github.com/nolions/huckebein/internal/notify"
+	"github.com/nolions/huckebein/internal/server"
 )
 
 func main() {
@@ -12,6 +12,6 @@ func main() {
 	f := notify.NewsFirebase(ctx)
 	serv := server.New(ctx, f)
 	app := server.NewHttpServer(serv)
-	go app.SignalProcess()
 	app.Run()
+	go app.SignalProcess()
 }

@@ -1,7 +1,7 @@
 package server
 
 import (
-	"github.com/nolions/huckebein/model"
+	"github.com/nolions/huckebein/internal/model"
 	"log"
 	"net/http"
 
@@ -32,7 +32,7 @@ func (serv Application) notifyHandler(c *gin.Context) error {
 	err := c.BindJSON(&notifyMsg)
 	log.Printf("req:%v", notifyMsg)
 	if err != nil {
-		log.Fatalf("request data error: %v\n", err)
+		log.Printf("request data error: %v\n", err)
 		return err
 	}
 
@@ -48,7 +48,7 @@ func (serv Application) multiNotifyHandler(c *gin.Context) error {
 	err := c.BindJSON(&json)
 	log.Printf("req:%v", json)
 	if err != nil {
-		log.Fatalf("request data error: %v\n", err)
+		log.Printf("request data error: %v\n", err)
 		return err
 	}
 
@@ -62,7 +62,7 @@ func (serv Application) batchNotifyHandler(c *gin.Context) error {
 	err := c.BindJSON(&json)
 	log.Printf("req:%v", json)
 	if err != nil {
-		log.Fatalf("request data error: %v\n", err)
+		log.Printf("request data error: %v\n", err)
 		return err
 	}
 

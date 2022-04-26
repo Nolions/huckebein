@@ -2,6 +2,10 @@
 
 poc apply cloud messaging server use golang by firebase
 
+## System work Follow
+
+![Sequence Diagram](./docs/system.png)
+
 ## Deploy Guide
 
 **Setting environment variable**

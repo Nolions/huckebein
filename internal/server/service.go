@@ -5,25 +5,28 @@ import (
 	"fmt"
 	"github.com/nolions/huckebein/conf"
 	"github.com/nolions/huckebein/internal/notify"
+	"go.uber.org/zap"
 	"log"
 	"net/http"
 	"time"
 )
 
 type Application struct {
-	Ctx context.Context
-	//Firebase *firebase.App
+	Ctx    context.Context
 	Notify notify.Notify
+	Logger *zap.SugaredLogger
 }
 
 type Server struct {
 	HttpServer *http.Server
+	Logger     *zap.SugaredLogger
 }
 
-func New(ctx context.Context, n *notify.Firebase) *Application {
+func New(ctx context.Context, n *notify.Firebase, logger *zap.SugaredLogger) *Application {
 	return &Application{
 		Ctx:    ctx,
 		Notify: n,
+		Logger: logger,
 	}
 }
 
@@ -34,7 +37,7 @@ func NewHttpServer(app *Application, conf *conf.HttpServ) *Server {
 	app.router(e)
 
 	addr := fmt.Sprintf(":%s", conf.Addr)
-	log.Printf("Listening on %s", addr)
+	app.Logger.Infof("Listening on %s\n", addr)
 	h := &http.Server{
 		Addr:         addr,
 		Handler:      e,
@@ -44,6 +47,7 @@ func NewHttpServer(app *Application, conf *conf.HttpServ) *Server {
 
 	return &Server{
 		HttpServer: h,
+		Logger:     app.Logger,
 	}
 }
 

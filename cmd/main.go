@@ -7,6 +7,7 @@ import (
 	"github.com/nolions/huckebein/conf"
 	"github.com/nolions/huckebein/internal/notify"
 	"github.com/nolions/huckebein/internal/server"
+	"go.uber.org/zap"
 	"log"
 	"os"
 	"os/signal"
@@ -16,6 +17,7 @@ import (
 
 var (
 	confPath string // config path
+	logger   *zap.SugaredLogger
 )
 
 func main() {
@@ -27,9 +29,12 @@ func main() {
 		log.Fatal(errors.New(err.Error()))
 	}
 
+	logger = zap.NewExample().Sugar()
+	defer logger.Sync()
+
 	ctx := context.Background()
-	f := notify.NewsFirebase(ctx)
-	app := server.New(ctx, f)
+	f := notify.NewsFirebase(ctx, logger)
+	app := server.New(ctx, f, logger)
 	serv := server.NewHttpServer(app, &config.HttpServ)
 	serv.Run()
 	shutdown(&config.App, serv)
@@ -39,15 +44,14 @@ func shutdown(conf *conf.App, srv *server.Server) {
 	c := make(chan os.Signal, 1)
 	signal.Notify(c, syscall.SIGHUP, syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGINT)
 	s := <-c
-	log.Printf("signal is %s", s)
-	//log.Info().Msgf("get a signal %s. (%s) Server is shutting down ...", s.String(), project)
+	logger.Infof("get a signal %s. (%s) Server is shutting down ...\n", s.String(), conf.Name)
 
 	// close http server with timeout.
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	if err := srv.Shutdown(ctx); err != nil {
-		//log.Fatal().Msgf("http server shutdown: %v", err)
+		logger.Fatalf("http server shutdown: %v\n", err)
 	}
 
-	//log.Info().Msgf("(%s) Server is exit.", project)
+	logger.Info("(%s) Server is exit.\n", conf.Name)
 }

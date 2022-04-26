@@ -5,7 +5,7 @@ import (
 	firebase "firebase.google.com/go/v4"
 	"firebase.google.com/go/v4/messaging"
 	"github.com/nolions/huckebein/internal/model"
-	"log"
+	"go.uber.org/zap"
 )
 
 type Notify interface {
@@ -17,23 +17,25 @@ type Notify interface {
 type Firebase struct {
 	Ctx      context.Context
 	Firebase *firebase.App
+	Logger   *zap.SugaredLogger
 }
 
 // NewsFirebase
 // init Firebase
-func NewsFirebase(ctx context.Context) *Firebase {
+func NewsFirebase(ctx context.Context, logger *zap.SugaredLogger) *Firebase {
 	return &Firebase{
 		Ctx:      ctx,
-		Firebase: newsFirebaseApp(ctx),
+		Firebase: newsFirebaseApp(ctx, logger),
+		Logger:   logger,
 	}
 }
 
 // NewsFirebaseApp
 // init Firebase app
-func newsFirebaseApp(ctx context.Context) *firebase.App {
+func newsFirebaseApp(ctx context.Context, logger *zap.SugaredLogger) *firebase.App {
 	app, err := firebase.NewApp(ctx, nil)
 	if err != nil {
-		log.Fatalf("error initializing app: %v\n", err)
+		logger.Errorf("error initializing app: %v\n", err)
 	}
 
 	return app
@@ -42,7 +44,7 @@ func newsFirebaseApp(ctx context.Context) *firebase.App {
 func (f *Firebase) SendNotify(msg *model.NotifyReq) {
 	client, err := f.Firebase.Messaging(f.Ctx)
 	if err != nil {
-		log.Printf("error getting Messaging client: %v\n", err)
+		f.Logger.Errorf("error getting Messaging client: %v\n", err)
 	}
 
 	// See documentation on defining a message payload.
@@ -56,9 +58,9 @@ func (f *Firebase) SendNotify(msg *model.NotifyReq) {
 
 	response, err := client.Send(f.Ctx, message)
 	if err != nil {
-		log.Fatalln(err)
+		f.Logger.Errorf("send Messaging error: %v\n", err)
 	}
-	log.Printf("Successfully sent message:%v", response)
+	f.Logger.Infof("Successfully sent message:%v\n", response)
 }
 
 // SendMultiNotify
@@ -66,7 +68,7 @@ func (f *Firebase) SendNotify(msg *model.NotifyReq) {
 func (f *Firebase) SendMultiNotify(msg *model.MultiNotifyReq) {
 	client, err := f.Firebase.Messaging(f.Ctx)
 	if err != nil {
-		log.Fatalf("error getting Messaging client: %v\n", err)
+		f.Logger.Errorf("error getting Messaging client: %v\n", err)
 	}
 
 	// See documentation on defining a message payload.
@@ -80,9 +82,9 @@ func (f *Firebase) SendMultiNotify(msg *model.MultiNotifyReq) {
 
 	response, err := client.SendMulticast(f.Ctx, message)
 	if err != nil {
-		log.Fatalln(err)
+		f.Logger.Errorf("send Multicast Messaging error: %v\n", err)
 	}
-	log.Printf("Successfully sent message:%v", response)
+	f.Logger.Infof("Successfully sent message:%v\n", response)
 }
 
 // BatchSendNotify
@@ -90,7 +92,7 @@ func (f *Firebase) SendMultiNotify(msg *model.MultiNotifyReq) {
 func (f *Firebase) BatchSendNotify(msgs []model.NotifyReq) {
 	client, err := f.Firebase.Messaging(f.Ctx)
 	if err != nil {
-		log.Fatalf("error getting Messaging client: %v\n", err)
+		f.Logger.Errorf("error getting Messaging client: %v\n", err)
 	}
 
 	var messages []*messaging.Message
@@ -108,7 +110,7 @@ func (f *Firebase) BatchSendNotify(msgs []model.NotifyReq) {
 
 	resp, err := client.SendAll(context.Background(), messages)
 	if err != nil {
-		log.Fatalln(err)
+		f.Logger.Errorf("send Batch Messaging error: %v\n", err)
 	}
-	log.Printf(" Successfully batch send notification message:%v", resp)
+	f.Logger.Infof("Successfully sent message:%v\n", resp)
 }

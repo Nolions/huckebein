@@ -10,4 +10,5 @@ require (
 	github.com/go-playground/validator/v10 v10.10.1 // indirect
 	github.com/spf13/viper v1.11.0
 	github.com/ugorji/go v1.2.7 // indirect
+	go.uber.org/zap v1.21.0 // indirect
 )

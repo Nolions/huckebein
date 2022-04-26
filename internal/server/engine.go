@@ -10,7 +10,7 @@ import (
 func engine() *gin.Engine {
 	e := &gin.Engine{}
 
-	gin.SetMode(gin.DebugMode)
+	gin.SetMode(gin.DebugMode) // TODO
 	e = gin.Default()
 
 	c := cors.DefaultConfig()

@@ -1,0 +1,9 @@
+app:
+  name: kyogre
+  version: v0.1.0
+
+http_serv:
+  addr: 7777
+  mode: release
+  read_timeout: 10s
+  write_timeout: 10s

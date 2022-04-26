@@ -180,4 +180,5 @@ $RECYCLE.BIN/
 
 # End of https://www.toptal.com/developers/gitignore/api/go,goland,macos,windows,linux
 
-huckebein-firebase-adminsdk.json
+\huckebein-firebase-adminsdk.json
+\conf.yaml
